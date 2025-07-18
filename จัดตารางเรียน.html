@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดตารางเรียน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .time-cell {
+            min-width: 180px;
+        }
+        .course-item {
+            transition: all 0.3s ease;
+        }
+        .course-item:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-center mb-6 text-indigo-700">จัดตารางเรียน</h1>
+        
+        <!-- Input Form -->
+        <div class="mb-8 bg-indigo-50 p-4 rounded-lg">
+            <h2 class="text-xl font-semibold mb-4 text-indigo-700">เพิ่มรายวิชา</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">รหัสวิชา</label>
+                    <input type="text" id="courseCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="เช่น CS101">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Section</label>
+                    <input type="text" id="section" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="เช่น 1">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">วัน</label>
+                    <select id="day" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="จันทร์">จันทร์</option>
+                        <option value="อังคาร">อังคาร</option>
+                        <option value="พุธ">พุธ</option>
+                        <option value="พฤหัสบดี">พฤหัสบดี</option>
+                        <option value="ศุกร์">ศุกร์</option>
+                        <option value="เสาร์">เสาร์</option>
+                        <option value="อาทิตย์">อาทิตย์</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">เวลาเรียน</label>
+                    <select id="timeSlot" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="08.40-11.00">08.40-11.00</option>
+                        <option value="12.00-14.20">12.00-14.20</option>
+                        <option value="14.30-16.50">14.30-16.50</option>
+                        <option value="17.00-19.20">17.00-19.20</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2 lg:col-span-1 flex items-end">
+                    <button id="addCourse" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition duration-300 ease-in-out">
+                        เพิ่มรายวิชา
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-indigo-100">
+                        <th class="border border-indigo-200 p-2">วัน / เวลา</th>
+                        <th class="border border-indigo-200 p-2 time-cell">08.40-11.00</th>
+                        <th class="border border-indigo-200 p-2 time-cell">12.00-14.20</th>
+                        <th class="border border-indigo-200 p-2 time-cell">14.30-16.50</th>
+                        <th class="border border-indigo-200 p-2 time-cell">17.00-19.20</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border border-indigo-200 p-2 font-medium bg-indigo-50">จันทร์</td>
+                        <td id="จันทร์-08.40-11.00" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="จันทร์-12.00-14.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="จันทร์-14.30-16.50" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="จันทร์-17.00-19.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-indigo-200 p-2 font-medium bg-indigo-50">อังคาร</td>
+                        <td id="อังคาร-08.40-11.00" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="อังคาร-12.00-14.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="อังคาร-14.30-16.50" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="อังคาร-17.00-19.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-indigo-200 p-2 font-medium bg-indigo-50">พุธ</td>
+                        <td id="พุธ-08.40-11.00" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="พุธ-12.00-14.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="พุธ-14.30-16.50" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="พุธ-17.00-19.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-indigo-200 p-2 font-medium bg-indigo-50">พฤหัสบดี</td>
+                        <td id="พฤหัสบดี-08.40-11.00" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="พฤหัสบดี-12.00-14.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="พฤหัสบดี-14.30-16.50" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="พฤหัสบดี-17.00-19.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-indigo-200 p-2 font-medium bg-indigo-50">ศุกร์</td>
+                        <td id="ศุกร์-08.40-11.00" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="ศุกร์-12.00-14.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="ศุกร์-14.30-16.50" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="ศุกร์-17.00-19.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                    </tr>
+                    <tr>
+                        <td class="border border-indigo-200 p-2 font-medium bg-indigo-50">เสาร์</td>
+                        <td id="เสาร์-08.40-11.00" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="เสาร์-12.00-14.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="เสาร์-14.30-16.50" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                        <td id="เสาร์-17.00-19.20" class="border border-indigo-200 p-2 h-20 align-top"></td>
+                    </tr>
+                    <tr>
+                  
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Course List -->
+        <div class="mt-8">
+            <h2 class="text-xl font-semibold mb-4 text-indigo-700">รายวิชาทั้งหมด</h2>
+            <div id="courseList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Course items will be added here -->
+            </div>
+        </div>
+
+        <!-- Clear All Button -->
+        <div class="mt-6 text-center">
+            <button id="clearAll" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-md transition duration-300 ease-in-out">
+                ล้างข้อมูลทั้งหมด
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved courses from localStorage
+            loadCourses();
+
+            // Add course button event
+            document.getElementById('addCourse').addEventListener('click', function() {
+                addCourse();
+            });
+
+            // Clear all button event
+            document.getElementById('clearAll').addEventListener('click', function() {
+                if (confirm('คุณต้องการลบข้อมูลทั้งหมดใช่หรือไม่?')) {
+                    clearAllCourses();
+                }
+            });
+
+            // Generate random colors for courses
+            function getRandomColor() {
+                const colors = [
+                    'bg-blue-100 border-blue-300 text-blue-800',
+                    'bg-green-100 border-green-300 text-green-800',
+                    'bg-purple-100 border-purple-300 text-purple-800',
+                    'bg-pink-100 border-pink-300 text-pink-800',
+                    'bg-yellow-100 border-yellow-300 text-yellow-800',
+                    'bg-teal-100 border-teal-300 text-teal-800',
+                    'bg-orange-100 border-orange-300 text-orange-800',
+                    'bg-indigo-100 border-indigo-300 text-indigo-800',
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            // Add a new course
+            function addCourse() {
+                const courseCode = document.getElementById('courseCode').value.trim();
+                const section = document.getElementById('section').value.trim();
+                const day = document.getElementById('day').value;
+                const timeSlot = document.getElementById('timeSlot').value;
+
+                if (!courseCode || !section) {
+                    alert('กรุณากรอกรหัสวิชาและ Section');
+                    return;
+                }
+
+                const courseId = `${courseCode}-${section}-${day}-${timeSlot}`;
+                const courseColor = getRandomColor();
+                
+                // Check if the time slot is already occupied
+                const cellId = `${day}-${timeSlot}`;
+                const cell = document.getElementById(cellId);
+                
+                if (cell.innerHTML.trim() !== '') {
+                    alert('ช่วงเวลานี้มีรายวิชาอื่นอยู่แล้ว');
+                    return;
+                }
+
+                // Create course object
+                const course = {
+                    id: courseId,
+                    code: courseCode,
+                    section: section,
+                    day: day,
+                    timeSlot: timeSlot,
+                    color: courseColor
+                };
+
+                // Add to schedule
+                addCourseToSchedule(course);
+                
+                // Add to course list
+                addCourseToCourseList(course);
+                
+                // Save to localStorage
+                saveCourse(course);
+                
+                // Clear input fields
+                document.getElementById('courseCode').value = '';
+                document.getElementById('section').value = '';
+            }
+
+            // Add course to schedule table
+            function addCourseToSchedule(course) {
+                const cellId = `${course.day}-${course.timeSlot}`;
+                const cell = document.getElementById(cellId);
+                
+                cell.innerHTML = `
+                    <div class="course-item p-2 rounded-md border ${course.color}" data-id="${course.id}">
+                        <div class="font-medium">${course.code}</div>
+                        <div class="text-sm">Section: ${course.section}</div>
+                        <button class="remove-course text-xs mt-1 text-red-600 hover:text-red-800" 
+                                data-id="${course.id}">ลบ</button>
+                    </div>
+                `;
+                
+                // Add event listener to remove button
+                cell.querySelector('.remove-course').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const courseId = this.getAttribute('data-id');
+                    removeCourse(courseId);
+                });
+            }
+
+            // Add course to course list
+            function addCourseToCourseList(course) {
+                const courseList = document.getElementById('courseList');
+                const courseItem = document.createElement('div');
+                courseItem.className = `course-list-item p-3 rounded-md border ${course.color}`;
+                courseItem.setAttribute('data-id', course.id);
+                
+                courseItem.innerHTML = `
+                    <div class="font-medium">${course.code}</div>
+                    <div class="text-sm">Section: ${course.section}</div>
+                    <div class="text-sm">${course.day} ${course.timeSlot}</div>
+                    <button class="remove-course text-xs mt-2 text-red-600 hover:text-red-800" 
+                            data-id="${course.id}">ลบรายวิชา</button>
+                `;
+                
+                courseList.appendChild(courseItem);
+                
+                // Add event listener to remove button
+                courseItem.querySelector('.remove-course').addEventListener('click', function() {
+                    const courseId = this.getAttribute('data-id');
+                    removeCourse(courseId);
+                });
+            }
+
+            // Remove course
+            function removeCourse(courseId) {
+                // Get course details from localStorage
+                const courses = JSON.parse(localStorage.getItem('courses')) || {};
+                const course = courses[courseId];
+                
+                if (course) {
+                    // Remove from schedule
+                    const cellId = `${course.day}-${course.timeSlot}`;
+                    const cell = document.getElementById(cellId);
+                    cell.innerHTML = '';
+                    
+                    // Remove from course list
+                    const courseListItem = document.querySelector(`.course-list-item[data-id="${courseId}"]`);
+                    if (courseListItem) {
+                        courseListItem.remove();
+                    }
+                    
+                    // Remove from localStorage
+                    delete courses[courseId];
+                    localStorage.setItem('courses', JSON.stringify(courses));
+                }
+            }
+
+            // Save course to localStorage
+            function saveCourse(course) {
+                const courses = JSON.parse(localStorage.getItem('courses')) || {};
+                courses[course.id] = course;
+                localStorage.setItem('courses', JSON.stringify(courses));
+            }
+
+            // Load courses from localStorage
+            function loadCourses() {
+                const courses = JSON.parse(localStorage.getItem('courses')) || {};
+                
+                for (const courseId in courses) {
+                    const course = courses[courseId];
+                    addCourseToSchedule(course);
+                    addCourseToCourseList(course);
+                }
+            }
+
+            // Clear all courses
+            function clearAllCourses() {
+                // Clear schedule cells
+                const cells = document.querySelectorAll('td[id]');
+                cells.forEach(cell => {
+                    cell.innerHTML = '';
+                });
+                
+                // Clear course list
+                document.getElementById('courseList').innerHTML = '';
+                
+                // Clear localStorage
+                localStorage.removeItem('courses');
+            }
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9610615965567b41',t:'MTc1MjgyNDk0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
